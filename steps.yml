@@ -1,0 +1,55 @@
+version: v1
+description: Approval example
+
+steps:
+- name: init-workflow
+  image: alpine:latest
+  input:
+  - echo "Initializing workflow - Nebula Provision Demo"
+  - echo "Provisioning a GKE cluster"
+- name: approval
+  description: Provisioning resources requires approval
+  type: approval
+  dependsOn:
+  - init-workflow
+- name: echo one
+  image: relaysh/stdlib-step-echo
+  spec:
+    message: approved
+  dependsOn: approval
+- name: chained approval
+  description: Provisioning resources requires approval
+  type: approval
+  dependsOn:
+  - echo one
+- name: echo
+  image: relaysh/stdlib-step-echo
+  spec:
+    message: approved
+  dependsOn: chained approval
+- name: approve again
+  type: approval
+  dependsOn:
+  - init-workflow
+- name: echo-32312
+  image: relaysh/stdlib-step-echo
+  spec:
+    message: approved again
+  dependsOn: approve again
+- name: powershell-step-run
+  image: relaysh/powershell-step-run
+  spec:
+    git:
+      connection: {}
+    script: Write-Output "starting"; Start-Sleep -s 15; Write-Output "ending";
+  dependsOn: init-workflow
+- name: echo two part 2
+  image: relaysh/stdlib-step-echo
+  spec:
+    message: echo part 2
+  dependsOn: approve again
+- name: echo part 3
+  image: relaysh/stdlib-step-echo
+  spec:
+    message: echo part 3
+  dependsOn: approve again
