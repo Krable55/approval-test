@@ -5,7 +5,7 @@ steps:
 - name: init-workflow
   image: alpine:latest
   input:
-  - echo "Initializing workflow - Nebula Provision Demo"
+  - echo "Initializing workflow - Nebula Provision Demos"
   - echo "Provisioning a GKE cluster"
 - name: approval
   description: Provisioning resources requires approval
